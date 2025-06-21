@@ -1,15 +1,20 @@
 import logo from "./logo.svg";
-import logop from "./logo.png";
+// import logop from "./logo.png";
+import ticketmovietext from "./ticketmovietext.svg";
+import ticketmovielightgradient from "./ticketmovielightgradient.svg";
 import logo_2 from "./logo_2.svg";
 import marvelLogo from "./marvelLogo.svg";
 import googlePlay from "./googlePlay.svg";
 import appStore from "./appStore.svg";
 import screenImage from "./screenImage.svg";
 import profile from "./profile.png";
-
+// import backgroundImage from "./backgroundImage.png";
+// export const backgroundImagePath = backgroundImage;
 export const assets = {
   logo,
-  logop,
+  ticketmovietext,
+  ticketmovielightgradient,
+  // logop,
   logo_2,
   marvelLogo,
   googlePlay,
