@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { assets, dummyDateTimeData, dummyShowsData } from '../assets/assets'
 import Loading from '../components/Loading'
-import { ClockIcon, Dice1 } from 'lucide-react'
+import { ArrowRightIcon, ClockIcon, Dice1 } from 'lucide-react'
 import isoTimeFormat from '../lib/isoTimeFormat'
 import BlurCircle from '../components/BlurCircle'
 import toast from 'react-hot-toast'
@@ -42,7 +42,7 @@ const SeatLayout = () => {
         {Array.from({ length: count},(_, i)=> {
           const seatId = `${row}${i+1}`;
           return (
-            <button key={seatId} onClick={()=> handleSeatClick(seatId)} className={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId && "bg-primary text-white")}`}>
+            <button key={seatId} onClick={()=> handleSeatClick(seatId)} className={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"}`}>
               {seatId}
             </button>
           );
@@ -58,7 +58,7 @@ const SeatLayout = () => {
 
   return show ? (
     <div className='flex flex-col md:flex-row px-6 md:px-16 lg:px-40 py-30 md:pt-50'>
-      <div className='w-60 bg-primary/10 border border-primary/20 rounded-lg py-10 md:sticky md:top-30'>
+      <div className='w-60 bg-primary/10 border border-primary/20 rounded-lg py-10 h-max md:sticky md:top-30'>
         <p className='text-lg font-semibold px-6'>
           Available Timings
         </p>
@@ -92,7 +92,10 @@ const SeatLayout = () => {
         ))}
       </div>
       </div>
-     
+      <button onClick={()=> navigate('/my-bookings')} className='flex items-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active-scale-95 '>
+        Proceed To Checkout
+        <ArrowRightIcon strokeWidth={3} className='w-4 h-4'/>
+      </button>
       </div>
     </div>
   ) : (
