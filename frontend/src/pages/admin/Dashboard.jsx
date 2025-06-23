@@ -1,9 +1,10 @@
-import { ChartLineIcon, CircleDollarSignIcon, PlayCircleIcon, UserIcon } from 'lucide-react';
+import { ChartLineIcon, CircleDollarSignIcon, PlayCircleIcon, StarIcon, UserIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import Loading from '../../components/Loading'
 import { dummyDashboardData } from '../../assets/assets';
 import BlurCircle from '../../components/BlurCircle'
 import Title from '../../components/admin/Title';
+import { dateFormat } from '../../lib/dateFormat'
 
 const Dashboard = () => {
 
@@ -36,7 +37,7 @@ const Dashboard = () => {
     <>
     <Title text1='Admin' text2='Dashboard' />
     <div>
-      <BlurCircle top='-100px' left='0' />
+      <BlurCircle top='-100px' left='0px' />
       <div className='flex  flex-wrap gap-4 w-full'>
         {dashboardCards.map((card, index) => (
           <div key={index} className='flex items-center justify-between px-4 py-3 bg-primary/10 border-primary/20 rounded-md max-w-50 w-full' >
@@ -56,17 +57,23 @@ const Dashboard = () => {
     <p className='mt-10 text-lg font-medium'>
       Active Shows
     </p>
-    <div>
-      <BlurCircle top='100px' lef='-10px'/>
+    <div className='relative flex flex-wrap gap-6 mt-4 max-w-5xl'>
+      <BlurCircle top='100px' left='-10%'/>
 
       {dashboardData.activeShows.map((show) => (
-        <div>
+        <div keu={show._id} className='w-55 rounded-lg overflow-hidden h-full pb-3 bg-primary/10 border border-primary/20 hover:translate-y-1 transition duration-300'>
           <img src={show.movie.poster_path} alt="" className='h-60 w-full object-cover' />
-          <p>{show.movie.title}</p>
-          <div>
-            <p>{currency} {show.showPrice}</p>
-            <p></p>
+          <p className='font-medium p-2 truncate'>{show.movie.title}</p>
+          <div className='flex items-center justify-between px-2'>
+            <p className='text-lg font-medium'>{currency} {show.showPrice}</p>
+            <p className='flex items-center gap-1 text-sm text-gray-400 mt-1 pr-1'>
+              <StarIcon className='w-4 h-4 text-primary fill-primary' />
+              {show.movie.vote_average.toFixed(1)}
+            </p>
           </div>
+          <p>
+        {dateFormat(show.showDateTime)}
+          </p>
         </div>
       ))}
 
