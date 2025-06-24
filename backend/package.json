@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@clerk/express": "^1.7.1",
+    "inngest": "^3.39.2"
+  }
+}
