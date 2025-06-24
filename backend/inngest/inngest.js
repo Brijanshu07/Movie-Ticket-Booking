@@ -1,7 +1,7 @@
 import { Inngest } from "inngest";
 import User from "../models/User.js";
 
-export const inngest = new Inngest({ id: "ticket-movie-ki-hi" });
+export const inngest = new Inngest({ id: "ticket_movie_ki_hi" });
 
 //function to save user data
 const syncUserCreation = inngest.createFunction(
@@ -20,6 +20,7 @@ const syncUserCreation = inngest.createFunction(
       name: first_name + " " + last_name,
       image: image_url,
     };
+    await User.create(userData);
   }
 );
 

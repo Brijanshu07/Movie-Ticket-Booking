@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { trusted } from "mongoose";
 
 const userSchema = new mongoose.Schema({
   _id: {
