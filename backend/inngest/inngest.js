@@ -122,11 +122,97 @@ const sendBookingConfirmationEmail = inngest.createFunction(
     });
   }
 );
+
+const sendShowRemainders = inngest.createFunction(
+  { id: "send-show-reminders" },
+  { cron: "0 */8 * * *" },
+  async ({ step }) => {
+    const now = new Date();
+    const in8Hours = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+    const windowStart = new Date(in8Hours.getTime() - 10 * 60 * 1000);
+    const reminderTasks = await step.run("prepare-reminder-tasks", async () => {
+      const shows = await Show.find({
+        showTime: {
+          $gte: windowStart,
+          $lte: in8Hours,
+        },
+      }).populate("movie");
+
+      for (const show of shows) {
+        if (!show.movie || !show.occupiedSeats) continue;
+        const userIds = [...new Set(Object.values(show.occupiedSeats))];
+        if (userIds.length === 0) continue;
+        const users = await User.find({ _id: { $in: userIds } }).select(
+          "name email"
+        );
+
+        for (const user of users) {
+          BackgroundTaskStatus.push({
+            userEmail: user.email,
+            userName: user.name,
+            movieTitle: show.movie.title,
+            showTime: show.showTime,
+          });
+        }
+      }
+      return tasks;
+    });
+    if (reminderTasks.length === 0) {
+      return { sent: 0, message: "No reminder to send" };
+    }
+    const results = await step.run("send-all-reminders", async () => {
+      return await Promise.allSettled(
+        reminderTasks.map((task) =>
+          sendEmail({
+            to: task.userEmail,
+            subject: `Reminder : Your movie "${task.movieTitle}" starts soon! `,
+            body: `<p>Bole to picture shuru hone wali hai bhaai</p>`,
+          })
+        )
+      );
+    });
+    const sent = results.filter((r) => r.status === "fulfilled").length;
+    const failed = results.length - sent;
+    return {
+      sent,
+      failed,
+      message: `Sent ${sent} reminders, failed ${failed} reminders`,
+    };
+  }
+);
 // Create an empty array where we'll export future Inngest functions
+
+const sendNewShowNotification = inngest.createFunction(
+  {
+    id: "send-new-show-notification",
+  },
+  {
+    event: "app/show.added",
+  },
+  async ({ event }) => {
+    const { movieTitle } = event.data;
+    const users = await User.find({});
+    for (const user of users) {
+      const userEmail = user.email;
+      const userName = user.name;
+      const subject = `New Show Added: ${movieTitle}`;
+      const body = `<p>Nayi nayi picture lagi hai. Chalti hai kya 9-12?</p>`;
+      await sendEmail({
+        to: userEmail,
+        subject,
+        body,
+      });
+    }
+    return { message: "Notification sent" };
+  }
+);
+
 export const functions = [
   syncUserCreation,
   syncUserDeletion,
   syncUserUpdation,
   releaseSeatsAndDeleteBooking,
   sendBookingConfirmationEmail,
+  sendShowRemainders,
+  sendNewShowNotification,
 ];
