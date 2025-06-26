@@ -37,3 +37,5 @@ app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
 
 app.listen(port, () => console.log(`Server is running at ${port} `));
+
+// console.log(process.env.SMTP_USER);
