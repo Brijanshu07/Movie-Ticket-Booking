@@ -138,6 +138,77 @@ npm run dev
 
 ---
 
+## How the Project Works
+
+### 1. Admin Workflow
+
+- **Add Shows:**  
+  The admin logs into the admin dashboard and can add new movie shows by selecting a movie (from TMDB or existing), specifying one or more dates and times, and setting a ticket price for each show.
+- **Show Management:**  
+  Each show is stored with its movie reference, show date/time, price, and a record of occupied seats.
+- **Dashboard:**  
+  The admin dashboard provides analytics, a list of all shows, and all bookings.
+
+### 2. User Workflow
+
+- **Browse Movies:**  
+  Users can browse all available movies and see details, including showtimes and trailers.
+- **Book Tickets:**  
+  Users select a movie, pick a date and time, and then choose their seats from the available options.
+- **Seat Selection Logic:**
+  - When a user selects seats and proceeds to book, those seats are temporarily locked for that user.
+  - The user is redirected to Stripe for payment.
+  - If the payment is completed within 10 minutes, the booking is confirmed and the seats are marked as paid.
+  - If the payment is not completed within 10 minutes, the booking is cancelled and the seats are released automatically, making them available for other users.
+- **My Bookings:**  
+  Users can view all their bookings, including payment status and seat numbers. If payment failed or was incomplete, they can retry payment from this section.
+- **Favorites:**  
+  Users can mark movies as favorites for quick access.
+
+### 3. Email Notifications
+
+- **Booking Confirmation:**  
+  After successful payment, users receive a confirmation email with booking details.
+- **Reminders:**  
+  Users receive reminder emails before their show starts.
+- **New Show Notifications:**  
+  When a new show is added, all users are notified via email.
+
+### 4. Seat Locking and Release
+
+- When a user initiates a booking, selected seats are locked for up to 10 minutes.
+- If payment is not completed in that window, an automated background process (using Inngest) releases the seats and deletes the incomplete booking.
+- This ensures fair access and prevents double-booking.
+
+### 5. Security and Roles
+
+- **Authentication:**  
+  All users must sign up or log in using Clerk.
+- **Admin Access:**  
+  Only users with the admin role (set in Clerk) can access admin endpoints and dashboard.
+- **API Security:**  
+  All sensitive endpoints require authentication and, where appropriate, admin authorization.
+
+### 6. Payments
+
+- **Stripe Integration:**  
+  All payments are processed securely via Stripe Checkout.
+- **Webhooks:**  
+  Stripe webhooks are used to confirm payment and trigger booking confirmation and email notifications.
+
+### 7. Data Storage
+
+- **MongoDB:**  
+  All movies, shows, bookings, and user data are stored in MongoDB.
+- **External API:**  
+  Movie metadata is fetched from TMDB when adding new movies.
+
+---
+
+This flow ensures a smooth experience for both admins and users, with robust handling of seat availability, payments, and notifications.
+
+---
+
 ## Deployment
 
 - Both frontend and backend are configured for Vercel deployment.
