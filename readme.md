@@ -4,6 +4,12 @@ A full-stack web application for browsing movies, booking tickets, and managing 
 
 ---
 
+## Live Demo
+
+Visit the deployed website: [https://ticket-movie-ki-hi.vercel.app/](https://ticket-movie-ki-hi.vercel.app/)
+
+---
+
 ## Features
 
 - **User Authentication**: Secure login/signup via Clerk.
