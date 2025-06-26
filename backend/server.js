@@ -15,7 +15,7 @@ const app = express();
 const port = 3000;
 await connectDB();
 app.use(
-  "/api/strip",
+  "/api/stripe",
   express.raw({
     type: "application/json",
   }),
